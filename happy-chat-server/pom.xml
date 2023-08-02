@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.wuhobin</groupId>
+        <artifactId>happy-chat</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>happy-chat-server</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!--   不添加下面一行 会打包报错  -->
+        <failOnMissingWebXml>false</failOnMissingWebXml>
+    </properties>
+
+
+    <dependencies>
+
+
+        <dependency>
+            <groupId>com.wuhobin</groupId>
+            <artifactId>happy-chat-domain</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <!-- 使用了log4j2，就要将spring-boot-starter-logging排除 -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
+
+
+    </dependencies>
+
+    <build>
+        <!-- idea 插件 -->
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <debug>true</debug>
+                    <debuglevel>lines,vars,source</debuglevel>
+                </configuration>
+            </plugin>
+            <!-- 跳过测试 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+
+        </plugins>
+
+        <resources>
+            <resource>
+                <filtering>true</filtering>
+                <directory>src/main/resources/</directory>
+                <!--打包时先排除掉三个文件夹 -->
+                <excludes>
+                    <exclude>dev/*</exclude>
+                    <exclude>test/*</exclude>
+                    <exclude>product/*</exclude>
+                </excludes>
+                <includes>
+                    <!--如果有其他定义通用文件，需要包含进来 -->
+                    <include>**/*</include>
+                </includes>
+            </resource>
+            <resource>
+                <!--这里是关键！ 根据不同的环境，把对应文件夹里的配置文件打包 -->
+                <directory>src/main/resources/${profiles.active}</directory>
+            </resource>
+        </resources>
+    </build>
+
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <profiles.active>dev</profiles.active>
+            </properties>
+            <!--activation用来指定激活方式，可以根据jdk环境，环境变量，文件的存在或缺失 -->
+            <activation>
+                <!--这个字段表示默认激活 -->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+
+        <profile>
+            <id>test</id>
+            <properties>
+                <profiles.active>test</profiles.active>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>product</id>
+            <properties>
+                <profiles.active>product</profiles.active>
+            </properties>
+        </profile>
+
+    </profiles>
+
+
+
+</project>
