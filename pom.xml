@@ -24,13 +24,13 @@
 
         <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
 
-        <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
+        <!--   minio对象存储     -->
+        <minio.version>8.2.1</minio.version>
 
         <spring-boot.version>2.5.14</spring-boot.version>
         <spring-cloud.version>2020.0.5</spring-cloud.version>
         <spring-cloud-alibaba.version>2.2.5.RELEASE</spring-cloud-alibaba.version>
         <spring-cloud.bootstrap>3.0.0</spring-cloud.bootstrap>
-        <nacos.version>0.2.7</nacos.version>
 
         <org.aspect.aspectjrt>1.9.4</org.aspect.aspectjrt>
         <org.aspect.aspectjweaver>1.9.4</org.aspect.aspectjweaver>
@@ -41,9 +41,7 @@
         <log4j2.version>2.17.2</log4j2.version>
         <bitwalker.version>1.21</bitwalker.version>
         <swagger.version>3.0.0</swagger.version>
-        <kaptcha.version>2.3.3</kaptcha.version>
         <fastjson.version>1.2.83</fastjson.version>
-        <oshi.version>6.4.0</oshi.version>
         <jwt.version>0.9.1</jwt.version>
     </properties>
 
@@ -119,6 +117,12 @@
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid-spring-boot-starter</artifactId>
                 <version>${druid.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.minio</groupId>
+                <artifactId>minio</artifactId>
+                <version>${minio.version}</version>
             </dependency>
 
             <dependency>
