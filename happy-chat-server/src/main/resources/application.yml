@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    active: @profiles.active@
+  jackson:
+    serialization:
+      #\u65F6\u95F4\u6233 \u8FD4\u56DE\u683C\u5F0F
+      write-dates-as-timestamps: true
+logging:
+  config: classpath:log4j2.xml
+
+server:
+  port: 8081
