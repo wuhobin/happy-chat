@@ -17,7 +17,7 @@ import java.util.Collections;
  */
 public class CodeGeneratorPlus {
 
-    private static String jdbcUrl = "jdbc:mysql://rm-bp1j8k9s2330jz5jdyo.mysql.rds.aliyuncs.com/diychat?useUnicode=true&characterEncoding=UTF-8";
+    private static String jdbcUrl = "jdbc:mysql://rm-bp1j8k9s2330jz5jdyo.mysql.rds.aliyuncs.com/happy-chat?useUnicode=true&characterEncoding=UTF-8";
     private static String jdbcUsername = "root";
     private static String jdbcPassword = "Whb18772916901";
 
@@ -29,7 +29,7 @@ public class CodeGeneratorPlus {
     /**
      * 项目业务module
      */
-    private static String moduleName = "diychat-domain";
+    private static String moduleName = "happy-chat-domain";
 
     /**
      * 生成代码的 @author 值
@@ -40,7 +40,7 @@ public class CodeGeneratorPlus {
      * 项目地址[改为自己本地项目位置]
      * D:/code/after-end/wechat-activity-platform/wechat-activity-platform-project/by-card-lottery/
      */
-    private static String projectPath = "D:/idea_wuhongbin/springboot_study/DiyChat/DiyChat";
+    private static String projectPath = "D:/idea_wuhongbin/springboot_study/happy-chat";
 
     /**
      * 要生成代码的表名配置
