@@ -109,12 +109,12 @@ public class LoginController {
 
         UserInfoVO userVO = (UserInfoVO) authenticate.getPrincipal();
         log.info("【手机号验证码登录】 登录成功，当前登录用户为: userVO={}",userVO);
-        String token = JwtUtils.generateJWT(userVO.getPhoneNum(),userVO.getNickName());
+        String token = JwtUtils.generateJWT(userVO.getId());
         if (StringUtils.isEmpty(token)) {
-            log.error("【用户登录】- 用户登录token为空! phoneNum = {}", userVO.getPhoneNum());
+            log.error("【用户登录】- 用户登录token为空! userId = {}", userVO.getId());
             return CommonResult.failed(ResultCode.LOGIN_FAIL);
         }
-        tokenCache.setToken(userVO.getPhoneNum(),token);
+        tokenCache.setToken(userVO.getId(),token);
         Map<String, Object> map = new HashMap<>(4);
         map.put("token",token);
         map.put("userVo",userVO);

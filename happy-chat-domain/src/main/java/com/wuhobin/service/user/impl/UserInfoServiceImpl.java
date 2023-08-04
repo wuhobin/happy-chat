@@ -56,4 +56,10 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoDO>
         save(userInfoDO);
         return BeanCopyUtil.copy(userInfoDO, UserInfoVO.class);
     }
+
+    @Override
+    public UserInfoVO getUserById(Long userId) {
+        UserInfoDO one = lambdaQuery().eq(UserInfoDO::getId, userId).last("limit 0,1").one();
+        return BeanCopyUtil.copy(one, UserInfoVO.class);
+    }
 }

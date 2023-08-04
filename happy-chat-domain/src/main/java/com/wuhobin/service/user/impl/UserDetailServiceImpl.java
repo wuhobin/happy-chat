@@ -3,6 +3,7 @@ package com.wuhobin.service.user.impl;
 import cn.hutool.system.UserInfo;
 import com.wuhobin.api.ResultCode;
 import com.wuhobin.cache.SmsCodeCache;
+import com.wuhobin.enums.UserStatus;
 import com.wuhobin.service.user.UserDetailService;
 import com.wuhobin.service.user.UserInfoService;
 import com.wuhobin.vo.UserInfoVO;
@@ -38,6 +39,10 @@ public class UserDetailServiceImpl implements UserDetailService {
         UserInfoVO userVO = userService.selectUserByMobile(mobile);
         if (ObjectUtils.isEmpty(userVO)){
             userVO = userService.saveUserInfo(mobile);
+        }
+        if (UserStatus.DISABLE.getCode().equals(userVO.getStatus())){
+            log.info("登录用户：{} 已被停用.", mobile);
+            throw new InternalAuthenticationServiceException("对不起，您的账号：" + mobile + " 已停用");
         }
         String verifyCode = smsCodeCache.getVerifyCode(mobile);
         if (StringUtils.isBlank(verifyCode)){

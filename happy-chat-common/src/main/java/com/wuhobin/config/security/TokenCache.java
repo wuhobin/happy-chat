@@ -31,11 +31,11 @@ public class TokenCache {
      *
      * @return
      */
-    public String getToken(String mobile) {
+    public String getToken(Long userId) {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        String key = String.format(TOKEN_CACHE_KEY,mobile);
+        String key = String.format(TOKEN_CACHE_KEY,userId);
         String token = valueOperations.get(key);
-        log.info("获取用户token mobile={},token={}",mobile,token);
+        log.info("获取用户token userId={},token={}",userId,token);
         if (StringUtils.isBlank(token)) {
             return "";
         }
@@ -47,21 +47,21 @@ public class TokenCache {
      * token过期时间为3天
      * @param token
      */
-    public void setToken(String mobile, String token) {
+    public void setToken(Long userId, String token) {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        String key = String.format(TOKEN_CACHE_KEY,mobile);
+        String key = String.format(TOKEN_CACHE_KEY,userId);
         valueOperations.set(key, token);
         redisTemplate.expire(key, 3, TimeUnit.DAYS);
-        log.info("设置用户token mobile={},token={}",mobile,token);
+        log.info("设置用户token userId={},token={}",userId,token);
     }
 
 
 
 
-    public void deleteToken(String mobile){
-        String key = String.format(TOKEN_CACHE_KEY,mobile);
+    public void deleteToken(Long userId){
+        String key = String.format(TOKEN_CACHE_KEY,userId);
         redisTemplate.delete(key);
-        log.info("删除用户token mobile={}",mobile);
+        log.info("删除用户token userId={}",userId);
     }
 
 }

@@ -35,4 +35,11 @@ public interface UserInfoService extends IService<UserInfoDO> {
      */
     UserInfoVO saveUserInfo(String mobile);
 
+
+    /**
+     * 根据用户id获取
+     * @param userId
+     * @return
+     */
+    UserInfoVO getUserById(Long userId);
 }

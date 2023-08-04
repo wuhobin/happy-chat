@@ -33,8 +33,8 @@ public class AuthenticationLogout implements LogoutSuccessHandler {
         httpServletResponse.setContentType("application/json;charset=utf-8");
         String token = httpServletRequest.getHeader("token");
         if (StringUtils.isNotBlank(token)){
-            String mobile = JwtUtils.getMobileByToken(token);
-            tokenCache.deleteToken(mobile);
+            Long userId = JwtUtils.getUserIdByToken(token);
+            tokenCache.deleteToken(userId);
         }
         httpServletResponse.getWriter().write(JSONUtil.parseObj(CommonResult.success()).toString());
     }

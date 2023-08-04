@@ -40,7 +40,7 @@ public class AuthenticationEnryPoint implements AuthenticationEntryPoint {
         }else {
             msg = "未登录，无法访问相应资源！";
         }
-        httpServletResponse.getWriter().write(JSONUtil.parseObj(CommonResult.success(msg)).toString());
+        httpServletResponse.getWriter().write(JSONUtil.parseObj(CommonResult.failed(-1000,msg)).toString());
     }
 }
 

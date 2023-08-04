@@ -35,21 +35,13 @@ public class JwtUtils {
      */
     private static final String DATA_KEY = "jwt_common_jwt_key";
 
-    /**
-     * 超时毫秒数（默认120分钟）
-     */
-    private static final int EXPIRES_SECOND = 2 * 60 * 60 * 1000 ;
-
 
     /**
      * 生成JWT字符串
      */
-    public static String generateJWT(String mobile,String nickName) {
+    public static String generateJWT(Long userId) {
         //签名算法，选择SHA-256
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-        //获取当前系统时间
-        long nowTimeMillis = System.currentTimeMillis();
-        Date now = new Date(nowTimeMillis);
         //将BASE64SECRET常量字符串使用base64解码成字节数组
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(BASE64_SECRET);
         //使用HmacSHA256签名算法生成一个HS256的签名秘钥Key
@@ -61,48 +53,8 @@ public class JwtUtils {
         JwtBuilder builder = null;
         try {
             builder = Jwts.builder().setHeader(headMap)
-                    .claim("mobile", AESUtil.encrypt(mobile, DATA_KEY))
-                    .claim("nickName", AESUtil.encrypt(nickName, DATA_KEY))
-                    .signWith(signatureAlgorithm, signingKey);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //添加Token过期时间
-        if (EXPIRES_SECOND >= 0) {
-            long expMillis = nowTimeMillis + EXPIRES_SECOND;
-            Date expDate = new Date(expMillis);
-            builder.setExpiration(expDate).setNotBefore(now);
-        }
-        return builder.compact();
-    }
-
-
-    /**
-     * 生成不过期jwt
-     *
-     * @param jsonObject
-     * @return
-     */
-    public static String generateEverJWT(JSONObject jsonObject) {
-        //签名算法，选择SHA-256
-        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-        //获取当前系统时间
-        long nowTimeMillis = System.currentTimeMillis();
-        Date now = new Date(nowTimeMillis);
-        //将BASE64SECRET常量字符串使用base64解码成字节数组
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(BASE64_SECRET);
-        //使用HmacSHA256签名算法生成一个HS256的签名秘钥Key
-        Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
-        //添加构成JWT的参数
-        Map<String, Object> headMap = new HashMap<>();
-        headMap.put("alg", SignatureAlgorithm.HS256.getValue());
-        headMap.put("typ", "JWT");
-        JwtBuilder builder = null;
-        try {
-            builder = Jwts.builder().setHeader(headMap)
-                    //加密后的openId
-                    .claim("json", AESUtil.encrypt(jsonObject.toString(), DATA_KEY))
-                    //Signature
+                    .claim("userId", AESUtil.encrypt(String.valueOf(userId), DATA_KEY))
+                    .claim("createTime", AESUtil.encrypt(DateUtil.getDateTimeStr(new Date()), DATA_KEY))
                     .signWith(signatureAlgorithm, signingKey);
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,26 +62,6 @@ public class JwtUtils {
         return builder.compact();
     }
 
-    /**
-     * 解析不过期的jwt
-     *
-     * @param jsonWebToken
-     * @return
-     */
-    public static JSONObject validateEverLogin(String jsonWebToken) {
-        Claims claims = parseJWT(jsonWebToken);
-        String decryptUserId = null;
-        JSONObject resultObject = new JSONObject();
-        if (claims != null) {
-            try {
-                decryptUserId = AESUtil.decrypt((String) claims.get("json"), DATA_KEY);
-                resultObject = JSONUtil.parseObj(decryptUserId);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return resultObject;
-    }
 
     /**
      * 判断令牌是否过期
@@ -178,15 +110,9 @@ public class JwtUtils {
         return null;
     }
 
-    /**
-     * 返回json字符串的demo:
-     * {"freshToken":"A.B.C","userName":"Judy","userId":"123", "userAgent":"xxxx"}
-     * freshToken-刷新后的jwt
-     * userName-客户名称
-     * userId-客户编号
-     * userAgent-客户端浏览器信息
-     */
-    public static String validateLogin(String jsonWebToken) {
+
+
+    public static Long getUserIdByToken(String jsonWebToken) {
         Claims claims = parseJWT(jsonWebToken);
         String decryptUserId = null;
         if (claims != null) {
@@ -196,67 +122,9 @@ public class JwtUtils {
                 e.printStackTrace();
             }
         }
-        return decryptUserId;
-    }
-
-    /**
-     * 获取渠道客户号
-     * @param jsonWebToken
-     * @return
-     */
-    public static String getUniqueIdByToken(String jsonWebToken) {
-        Claims claims = parseJWT(jsonWebToken);
-        String decryptUserId = null;
-        if (claims != null) {
-            try {
-                decryptUserId = AESUtil.decrypt((String) claims.get("uniqueId"), DATA_KEY);
-            } catch (Exception e) {
-                log.error("解析token获取uniqueId异常",e);
-            }
+        if (decryptUserId != null){
+            return Long.valueOf(decryptUserId);
         }
-        return decryptUserId;
+        return null;
     }
-
-
-
-    public static String validateLoginBackOpenid(String jsonWebToken) {
-        Claims claims = parseJWT(jsonWebToken);
-        String decryptUserId = null;
-        if (claims != null) {
-            try {
-                decryptUserId = AESUtil.decrypt((String) claims.get("openid"), DATA_KEY);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return decryptUserId;
-    }
-
-    public static String getMobileByToken(String jsonWebToken) {
-        Claims claims = parseJWT(jsonWebToken);
-        String decryptUserId = null;
-        if (claims != null) {
-            try {
-                decryptUserId = AESUtil.decrypt((String) claims.get("mobile"), DATA_KEY);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return decryptUserId;
-    }
-
-
-    public static String getNickNameByToken(String jsonWebToken) {
-        Claims claims = parseJWT(jsonWebToken);
-        String decryptUsername = null;
-        if (claims != null) {
-            try {
-                decryptUsername = AESUtil.decrypt((String) claims.get("nickName"), DATA_KEY);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return decryptUsername;
-    }
-
 }

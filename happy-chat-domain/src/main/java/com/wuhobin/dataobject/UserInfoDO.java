@@ -32,7 +32,7 @@ public class UserInfoDO implements Serializable {
 
     @ApiModelProperty("用户ID")
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
     @ApiModelProperty("用户昵称")
     private String nickName;
