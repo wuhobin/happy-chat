@@ -37,7 +37,7 @@
         <commons.io.version>2.11.0</commons.io.version>
 
         <common.pool.version>2.6.2</common.pool.version>
-
+        <netty-all.version>4.1.76.Final</netty-all.version>
         <log4j2.version>2.17.2</log4j2.version>
         <bitwalker.version>1.21</bitwalker.version>
         <swagger.version>3.0.0</swagger.version>
@@ -93,7 +93,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-bootstrap</artifactId>
@@ -106,6 +105,11 @@
                 <version>${redis.clients.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${netty-all.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.redisson</groupId>
