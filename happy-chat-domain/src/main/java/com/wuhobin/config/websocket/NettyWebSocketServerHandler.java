@@ -1,10 +1,12 @@
 package com.wuhobin.config.websocket;
 
+import cn.hutool.extra.spring.SpringUtil;
+import com.wuhobin.service.websocket.WebSocketService;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.transaction.config.TxNamespaceHandler;
+
 
 /**
  * @author wuhongbin
@@ -15,6 +17,8 @@ import org.springframework.transaction.config.TxNamespaceHandler;
 @Slf4j
 public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
+    private WebSocketService webSocketService;
+
     /**
      * 当web客户端连接后，触发该方法
      * @param ctx
@@ -23,6 +27,7 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Tex
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
         log.info("当前有客户端连接 ctx={}",ctx);
+        this.webSocketService = getService();
     }
 
     /**
@@ -33,6 +38,7 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Tex
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
         log.info("当前有客户端离线 ctx={}",ctx);
+        userOffLine(ctx);
     }
 
 
@@ -44,6 +50,7 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Tex
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.info("当前有客户端离线 ctx={}",ctx);
+        userOffLine(ctx);
     }
 
     /**
@@ -65,5 +72,14 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Tex
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, TextWebSocketFrame textWebSocketFrame) throws Exception {
         log.info("text={}", textWebSocketFrame.text());
+    }
+
+    private void userOffLine(ChannelHandlerContext ctx) {
+        this.webSocketService.removed(ctx.channel());
+        ctx.channel().close();
+    }
+
+    private WebSocketService getService() {
+        return SpringUtil.getBean(WebSocketService.class);
     }
 }
