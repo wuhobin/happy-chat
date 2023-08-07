@@ -1,10 +1,14 @@
 package com.wuhobin.config.websocket;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.wuhobin.service.websocket.WebSocketService;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -61,6 +65,19 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Tex
      */
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        if (evt instanceof IdleStateEvent) {
+            log.info("心跳检查 进入IdleStateEvent");
+            IdleStateEvent idleStateEvent = (IdleStateEvent) evt;
+            // 读空闲
+            if (idleStateEvent.state() == IdleState.READER_IDLE) {
+                // 关闭用户的连接
+                userOffLine(ctx);
+            }
+        } else if (evt instanceof WebSocketServerProtocolHandler.HandshakeComplete) {
+            log.info("心跳检查 进入HandshakeComplete");
+            this.webSocketService.connect(ctx.channel());
+        }
+        super.userEventTriggered(ctx, evt);
     }
 
     /**

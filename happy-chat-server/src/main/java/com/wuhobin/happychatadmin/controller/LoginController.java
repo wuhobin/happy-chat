@@ -1,6 +1,4 @@
 package com.wuhobin.happychatadmin.controller;
-
-
 import com.wuhobin.api.CommonResult;
 import com.wuhobin.api.ResultCode;
 import com.wuhobin.cache.SmsCodeCache;
@@ -8,11 +6,11 @@ import com.wuhobin.config.security.TokenCache;
 import com.wuhobin.config.security.mobile.MobileCodeAuthenticationToken;
 import com.wuhobin.rest.sms.SmsService;
 import com.wuhobin.utils.JwtUtils;
+import com.wuhobin.utils.SpringUtil;
 import com.wuhobin.vo.UserInfoVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -63,6 +61,11 @@ public class LoginController {
             if (StringUtils.isBlank(mobile)){
                 log.error("参数校验失败，mobile为空");
                 return CommonResult.failed(ResultCode.VALIDATE_FAILED);
+            }
+            //测试环境跳过
+            if (SpringUtil.isTest()|| SpringUtil.isDev()) {
+                smsCodeCache.setVerifyCode(mobile, "123456");
+                return CommonResult.success();
             }
             //判断该用户验证码连续错误次数
             Integer verifyCodeErr = smsCodeCache.getVerifyCodeErr(mobile);

@@ -1,5 +1,6 @@
 package com.wuhobin.service.websocket;
 
+import com.wuhobin.entity.websocket.WSBaseResp;
 import io.netty.channel.Channel;
 
 /**
@@ -24,5 +25,13 @@ public interface WebSocketService {
      * @param channel
      */
     void removed(Channel channel);
+
+    /**
+     * 推动消息给所有在线的人
+     *
+     * @param wsBaseResp 发送的消息体
+     * @param skipUid    需要跳过的人
+     */
+    void sendToAllOnline(WSBaseResp<?> wsBaseResp, Long skipUid);
 
 }
