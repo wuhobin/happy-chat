@@ -42,4 +42,11 @@ public interface UserInfoService extends IService<UserInfoDO> {
      * @return
      */
     UserInfoVO getUserById(Long userId);
+
+    /**
+     * 更新用户头像
+     * @param userId
+     * @param downloadUrl
+     */
+    void updateUserAvatar(Long userId, String downloadUrl);
 }

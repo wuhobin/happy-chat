@@ -124,12 +124,4 @@ public class LoginController {
         return CommonResult.success(map);
     }
 
-
-    @ApiOperation("测试")
-    @GetMapping("/test")
-    public CommonResult test(){
-        return CommonResult.success();
-    }
-
-
 }

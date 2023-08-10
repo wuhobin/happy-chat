@@ -5,6 +5,12 @@ spring:
     serialization:
       #\u65F6\u95F4\u6233 \u8FD4\u56DE\u683C\u5F0F
       write-dates-as-timestamps: true
+  servlet:
+    multipart:
+      # 单个文件大小
+      max-file-size: 10MB
+      # 设置总上传的文件大小
+      max-request-size: 100MB
 logging:
   config: classpath:log4j2.xml
 
