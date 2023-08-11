@@ -1,7 +1,7 @@
 package com.wuhobin.happychatadmin.controller;
 
 import com.wuhobin.api.CommonResult;
-import com.wuhobin.entity.websocket.WSBaseResp;
+import com.wuhobin.entity.websocket.WsBaseResp;
 import com.wuhobin.service.websocket.WebSocketService;
 import com.wuhobin.utils.SecurityUtils;
 import io.swagger.annotations.Api;
@@ -28,7 +28,7 @@ public class MessageController {
 
     @PostMapping("/send")
     public CommonResult sendMessage(){
-        WSBaseResp<String> resp = new WSBaseResp<>();
+        WsBaseResp<String> resp = new WsBaseResp<>();
         resp.setType(1);
         resp.setData("服务端主动发送消息");
         webSocketService.sendToAllOnline(resp, SecurityUtils.getUserId());

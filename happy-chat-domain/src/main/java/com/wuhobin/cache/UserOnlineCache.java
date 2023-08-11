@@ -36,6 +36,12 @@ public class UserOnlineCache {
         }
     }
 
+    public Boolean isOnline(Long userId) {
+        SetOperations<String,Long> setOperations = redisTemplate.opsForSet();
+        return setOperations.isMember(ONLINE_CHAR, userId);
+    }
+
+
     public void  removeOnlineUser(Long userId){
         SetOperations<String,Long> setOperations = redisTemplate.opsForSet();
         Long count = setOperations.remove(ONLINE_CHAR, userId);

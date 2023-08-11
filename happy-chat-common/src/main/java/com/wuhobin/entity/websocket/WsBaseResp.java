@@ -9,7 +9,7 @@ import lombok.Data;
  * @author admin
  */
 @Data
-public class WSBaseResp<T> {
+public class WsBaseResp<T> {
     /**
      * ws推送给前端的消息
      *
