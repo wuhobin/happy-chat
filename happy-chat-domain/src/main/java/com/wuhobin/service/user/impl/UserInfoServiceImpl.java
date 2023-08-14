@@ -10,6 +10,8 @@ import com.wuhobin.utils.http.WebUtils;
 import com.wuhobin.vo.UserInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -24,10 +26,6 @@ import java.util.Date;
  */
 @Service
 public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoDO> implements UserInfoService {
-
-
-    @Autowired
-    private HttpServletRequest httpServletRequest;
 
     @Autowired
     private UserNoCache userNoCache;
@@ -46,11 +44,13 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoDO>
 
     @Override
     public UserInfoVO saveUserInfo(String mobile) {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
         UserInfoDO userInfoDO = new UserInfoDO();
         userInfoDO.setPhoneNum(mobile);
         userInfoDO.setCreateTime(new Date());
         userInfoDO.setUpdateTime(new Date());
-        userInfoDO.setLoginIp(WebUtils.getClientRealIp(httpServletRequest));
+        userInfoDO.setLoginIp(WebUtils.getClientRealIp(request));
         userInfoDO.setNickName("星球用户" + userNoCache.getNewUserNo(mobile));
         userInfoDO.setLoginDate(new Date());
         save(userInfoDO);

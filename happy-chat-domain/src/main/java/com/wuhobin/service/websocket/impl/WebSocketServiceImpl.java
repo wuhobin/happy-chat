@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
+import java.net.InetSocketAddress;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
@@ -104,9 +105,11 @@ public class WebSocketServiceImpl implements WebSocketService {
         updateOnlineList(channel, userId);
         Boolean online = userOnlineCache.isOnline(userId);
         if (!online){
+            InetSocketAddress address = (InetSocketAddress) channel.remoteAddress();
             UserInfoDO userInfoDO = new UserInfoDO();
             userInfoDO.setId(userId);
             userInfoDO.setLoginDate(new Date());
+            userInfoDO.setLoginIp(address.getAddress().getHostAddress());
             applicationEventPublisher.publishEvent(new UserOnlineEvent(this, userInfoDO));
         }
     }

@@ -25,4 +25,6 @@ public class BasePlatformConfig {
 
     private String smsTemplateId;
 
+    private String baiduAk;
+
 }
