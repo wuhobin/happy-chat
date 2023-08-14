@@ -5,10 +5,13 @@ import com.wuhobin.service.user.MemberService;
 import com.wuhobin.service.user.UserInfoService;
 import com.wuhobin.vo.dto.UserInfoDto;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author wuhongbin
@@ -28,6 +31,11 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public List<UserInfoDto> onlineMemberList() {
-        return null;
+        Set<Long> members = userOnlineCache.getMembers();
+        if (CollectionUtils.isEmpty(members)) {
+            return Collections.emptyList();
+        }
+        List<UserInfoDto> list = userInfoService.selectOnlineUserList(members);
+        return list;
     }
 }

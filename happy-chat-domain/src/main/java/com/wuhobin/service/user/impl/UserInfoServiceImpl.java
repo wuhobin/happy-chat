@@ -8,13 +8,18 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuhobin.utils.BeanCopyUtil;
 import com.wuhobin.utils.http.WebUtils;
 import com.wuhobin.vo.UserInfoVO;
+import com.wuhobin.vo.dto.UserInfoDto;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -70,5 +75,14 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoDO>
                 .set(UserInfoDO::getUpdateTime,new Date())
                 .eq(UserInfoDO::getId,userId)
                 .update();
+    }
+
+    @Override
+    public List<UserInfoDto> selectOnlineUserList(Set<Long> members) {
+        List<UserInfoDO> list = lambdaQuery()
+                .in(UserInfoDO::getId, members)
+                .orderByDesc(UserInfoDO::getLoginDate)
+                .list();
+        return BeanCopyUtil.copy(list, UserInfoDto.class);
     }
 }

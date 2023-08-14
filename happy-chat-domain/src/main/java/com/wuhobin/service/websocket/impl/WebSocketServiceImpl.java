@@ -105,6 +105,7 @@ public class WebSocketServiceImpl implements WebSocketService {
         updateOnlineList(channel, userId);
         Boolean online = userOnlineCache.isOnline(userId);
         if (!online){
+            userOnlineCache.addOnlineUser(userId);
             InetSocketAddress address = (InetSocketAddress) channel.remoteAddress();
             UserInfoDO userInfoDO = new UserInfoDO();
             userInfoDO.setId(userId);

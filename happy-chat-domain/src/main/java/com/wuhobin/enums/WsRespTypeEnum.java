@@ -1,5 +1,6 @@
 package com.wuhobin.enums;
 
+import com.wuhobin.entity.websocket.WsOnlineOfflineNotify;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 @Getter
 public enum WsRespTypeEnum {
 
+    ONLINE_OFFLINE_NOTIFY(5, "用户上线", WsOnlineOfflineNotify.class),
     INVALIDATE_TOKEN(6, "使前端的token失效，意味着前端需要重新登录", null),
 
     ;

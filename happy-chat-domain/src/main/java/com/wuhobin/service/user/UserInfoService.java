@@ -3,6 +3,10 @@ package com.wuhobin.service.user;
 import com.wuhobin.dataobject.UserInfoDO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wuhobin.vo.UserInfoVO;
+import com.wuhobin.vo.dto.UserInfoDto;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -49,4 +53,11 @@ public interface UserInfoService extends IService<UserInfoDO> {
      * @param downloadUrl
      */
     void updateUserAvatar(Long userId, String downloadUrl);
+
+    /**
+     * 获取在线用户列表
+     * @param members
+     * @return
+     */
+    List<UserInfoDto> selectOnlineUserList(Set<Long> members);
 }

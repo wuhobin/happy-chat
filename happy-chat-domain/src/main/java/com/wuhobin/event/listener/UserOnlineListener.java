@@ -6,6 +6,7 @@ import com.wuhobin.dataobject.UserInfoDO;
 import com.wuhobin.entity.ipaddress.AddressResult;
 import com.wuhobin.event.UserOnlineEvent;
 import com.wuhobin.rest.ipaddress.IpAddressService;
+import com.wuhobin.service.adapter.WsAdapter;
 import com.wuhobin.service.user.UserInfoService;
 import com.wuhobin.service.websocket.WebSocketService;
 import com.wuhobin.utils.http.WebUtils;
@@ -39,12 +40,16 @@ public class UserOnlineListener {
     @Autowired
     private IpAddressService ipAddressService;
 
+    @Autowired
+    private WsAdapter wsAdapter;
+
 
     @Async
     @EventListener(classes = UserOnlineEvent.class)
     public void saveRedisAndPush(UserOnlineEvent event) {
         UserInfoDO user = event.getUser();
-        userOnlineCache.addOnlineUser(user.getId());
+        //推送给所有在线用户，该用户登录成功
+        webSocketService.sendToAllOnline(wsAdapter.buildOnlineNotifyResp(user));
     }
 
     @Async

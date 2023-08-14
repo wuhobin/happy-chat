@@ -6,7 +6,10 @@ import org.bouncycastle.jcajce.provider.symmetric.util.PBE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
+
+import java.util.Set;
 
 /**
  * @author wuhongbin
@@ -55,6 +58,11 @@ public class UserOnlineCache {
             return 0;
         }
         return size.intValue();
+    }
+
+    public Set<Long> getMembers() {
+        SetOperations<String, Long> setOps = redisTemplate.opsForSet();
+        return setOps.members(ONLINE_CHAR);
     }
 
 }
