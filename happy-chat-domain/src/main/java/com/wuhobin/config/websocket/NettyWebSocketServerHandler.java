@@ -107,6 +107,7 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Tex
             case AUTHORIZE:
                 log.info("【websocket收到前端消息】 用户主动认证 wsBaseReq={}", wsBaseReq);
                 webSocketService.authorize(ctx.channel(), wsBaseReq);
+
                 break;
             default:
                 log.info("未知类型");
